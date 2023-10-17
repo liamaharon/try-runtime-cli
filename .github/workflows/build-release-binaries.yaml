@@ -34,6 +34,7 @@ jobs:
     - name: Build Rust project (linux)
       if: matrix.platform.os == 'ubuntu-latest'
       run: |
+        sudo apt install --assume-yes build-essential git clang curl libssl-dev protobuf-compiler
         pip3 install ziglang
         cargo install cargo-zigbuild
         cargo zigbuild --release --target ${{ matrix.platform.target }}
