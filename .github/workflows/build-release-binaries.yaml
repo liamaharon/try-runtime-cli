@@ -31,16 +31,17 @@ jobs:
         toolchain: stable
         override: true
 
-    - name: Build Rust project (linux)
+    - name: Add musl target
+      run: rustup target add x86_64-unknown-linux-musl
+
+    - name: Install musl-tools
       if: matrix.platform.os == 'ubuntu-latest'
       run: |
-        sudo apt install --assume-yes build-essential git clang curl libssl-dev protobuf-compiler
-        pip3 install ziglang
-        cargo install cargo-zigbuild
-        cargo zigbuild --release --target ${{ matrix.platform.target }}
+        sudo apt-get update
+        sudo apt-get install -y musl-tools clang build-essential curl llvm-dev libclang-dev linux-headers-generic libsnappy-dev liblz4-dev libzstd-dev libgflags-dev zlib1g-dev libbz2-dev
+        sudo ln -s /usr/bin/g++ /usr/bin/musl-g++
 
-    - name: Build Rust project (macos)
-      if: matrix.platform.os == 'macos-latest'
+    - name: Build Rust project
       run: cargo build --release --target ${{ matrix.platform.target }}
 
     - name: Upload Binary to Release
