@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         platform: 
-          - { os: ubuntu-latest, target: x86_64-unknown-linux-musl }
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu.2.17 }
           - { os: macos-latest, target: x86_64-apple-darwin }
 
     runs-on: ${{ matrix.platform.os }}
@@ -31,12 +31,14 @@ jobs:
         toolchain: stable
         override: true
 
-    - name: Build Rust project (musl)
+    - name: Build Rust project (linux)
       if: matrix.platform.os == 'ubuntu-latest'
       run: |
-        docker run --rm -u root -v "${{ github.workspace }}":/home/rust/src ekidd/rust-musl-builder cargo build --release --target ${{ matrix.platform.target }}
+        pip3 install ziglang
+        cargo install cargo-zigbuild
+        cargo zigbuild --release --target ${{ matrix.platform.target }}
 
-    - name: Build Rust project (apple)
+    - name: Build Rust project (macos)
       if: matrix.platform.os == 'macos-latest'
       run: cargo build --release --target ${{ matrix.platform.target }}
 
