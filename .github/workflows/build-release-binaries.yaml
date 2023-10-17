@@ -19,7 +19,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    
     - name: Install Protoc
       uses: arduino/setup-protoc@v1
       with:
@@ -31,6 +30,9 @@ jobs:
         profile: minimal
         toolchain: stable
         override: true
+
+    - name: Add musl target
+      run: rustup target add x86_64-unknown-linux-musl
 
     - name: Build Rust project
       run: cargo build --release --target ${{ matrix.platform.target }}
