@@ -34,8 +34,7 @@ jobs:
     - name: Build Rust project (musl)
       if: matrix.platform.os == 'ubuntu-latest'
       run: |
-        alias rust-musl-builder='docker run --rm -v "${{ github.workspace }}":/home/rust/src ekidd/rust-musl-builder'
-        rust-musl-builder cargo build --release --target ${{ matrix.platform.target }}
+        docker run --rm -v "${{ github.workspace }}":/home/rust/src ekidd/rust-musl-builder cargo build --release --target ${{ matrix.platform.target }}
 
     - name: Build Rust project (apple)
       if: matrix.platform.os == 'macos-latest'
