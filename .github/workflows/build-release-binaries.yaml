@@ -31,16 +31,14 @@ jobs:
         toolchain: stable
         override: true
 
-    - name: Add musl target
-      run: rustup target add x86_64-unknown-linux-musl
-
-    - name: Install musl-tools
+    - name: Build Rust project (musl)
       if: matrix.platform.os == 'ubuntu-latest'
       run: |
-        sudo apt-get update
-        sudo apt-get install -y -qq musl-tools
+        alias rust-musl-builder='docker run --rm -v "${{ github.workspace }}":/home/rust/src ekidd/rust-musl-builder'
+        rust-musl-builder cargo build --release --target ${{ matrix.platform.target }}
 
-    - name: Build Rust project
+    - name: Build Rust project (apple)
+      if: matrix.platform.os == 'macos-latest'
       run: cargo build --release --target ${{ matrix.platform.target }}
 
     - name: Upload Binary to Release
