@@ -37,7 +37,7 @@ jobs:
     - name: Install musl-tools
       run: |
         sudo apt-get update
-        sudo apt-get install -y musl-tools
+        sudo apt-get install -y -qq musl-tools
 
     - name: Build Rust project
       run: cargo build --release --target ${{ matrix.platform.target }}
